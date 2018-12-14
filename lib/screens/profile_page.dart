@@ -2,9 +2,10 @@ import 'package:ad_app/user_post_list_view.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key key, this.title}) : super(key: key);
+  ProfilePage({Key key, this.title, this.username}) : super(key: key);
 
   final String title;
+  final String username;
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -52,6 +53,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],
+                ),
+                Text(widget.username ?? 'Username'),
+                Text('Posted ad count'),
+                IconButton(
+                  iconSize: 30.0,
+                  color: Colors.white,
+                  icon: Icon(Icons.settings),
+                  onPressed: () {},
                 ),
               ],
             ),
