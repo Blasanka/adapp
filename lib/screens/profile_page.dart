@@ -1,3 +1,4 @@
+import 'package:ad_app/screens/edit_user_profile.dart';
 import 'package:ad_app/user_post_list_view.dart';
 import 'package:flutter/material.dart';
 
@@ -60,7 +61,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   iconSize: 30.0,
                   color: Colors.white,
                   icon: Icon(Icons.settings),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                EditAdPage(title: 'Edit Profile')),
+                        (Route<dynamic> route) => false);
+                  },
                 ),
               ],
             ),

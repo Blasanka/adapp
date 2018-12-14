@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
@@ -6,19 +7,19 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-class AdEditPage extends StatefulWidget {
-  AdEditPage({Key key, this.title}) : super(key: key);
+class EditAdPage extends StatefulWidget {
+  EditAdPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _AdEditPageState createState() => _AdEditPageState();
+  _EditAdPageState createState() => _EditAdPageState();
 }
 
-class _AdEditPageState extends State<AdEditPage> {
+class _EditAdPageState extends State<EditAdPage> {
   final formKey = GlobalKey<FormState>();
 
-  String _currentPassword, _newPassword, _confirmPassword;
+  String _email, _currentPassword, _newPassword, _confirmPassword;
 
   final adReference =
       FirebaseDatabase.instance.reference().child('add-app').child('ad');
@@ -38,23 +39,27 @@ class _AdEditPageState extends State<AdEditPage> {
     }
     return false;
   }
+
   Future<Null> changePassword(String newPassword) async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
     const String API_KEY = 'YOUR_API_KEY';
     final String changePasswordUrl =
         'https://www.googleapis.com/identitytoolkit/v3/relyingparty/setAccountInfo?key=$API_KEY';
 
-        final String idToken = await user.getIdToken(); // where user is FirebaseUser user
+    final String idToken =
+        await user.getIdToken(); // where user is FirebaseUser user
 
-      final Map<String, dynamic> payload = {
-        'email': idToken,
-        'password': newPassword,
-        'returnSecureToken': true
-      };
+    final Map<String, dynamic> payload = {
+      'email': idToken,
+      'password': newPassword,
+      'returnSecureToken': true
+    };
 
-    await http.post(changePasswordUrl, 
-      body: json.encode(payload), 
-      headers: {'Content-Type': 'application/json'},  
-    )
+    await http.post(
+      changePasswordUrl,
+      body: json.encode(payload),
+      headers: {'Content-Type': 'application/json'},
+    );
   }
 
   void _createAd() async {
