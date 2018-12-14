@@ -1,0 +1,64 @@
+{
+  "add-app" : {
+    "ad" : {
+      "-LTWLZZ1uZ2-e27g8sO_" : {
+        "contact" : "07833232",
+        "description" : "This Building located at Nugegoda, delkada for rent for a rent",
+        "email" : "asaa@gmail.com",
+        "imageUrl" : [ "https://robohash.org/13", "https://robohash.org/33" ],
+        "price" : 35000.44,
+        "title" : "Nugegoda, 3rd floor for rent"
+      },
+      "-LT_mrc_wTAfc0KrbNxD" : {
+        "contact" : "07896443",
+        "description" : "This is a brand new car selling for a fixed price, for a immidiate reason",
+        "email" : "mail@email.com",
+        "imageUrl" : [ "https://robohash.org/22" ],
+        "price" : 40000000,
+        "title" : "Ford for selling"
+      },
+      "-LTa9kZdZzhjtufuqsST" : {
+        "contact" : "0712343222",
+        "description" : "Discovery 125, black color bike for sale It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+        "email" : "dias32@gmail.yahoo.com",
+        "imageUrl" : [ "https://firebasestorage.googleapis.com/v0/b/add-app-9ae19.appspot.com/o/246x0w.jpg?alt=media&token=bf325d47-fe6a-4177-ab43-dfa702516c54", "https://robohash.org/54", "https://robohash.org/9" ],
+        "price" : 23000,
+        "title" : "Discovery 125 selling"
+      },
+      "-LTb2BqQB-ZouZJHcA6e" : {
+        "contact" : "0774543233",
+        "description" : "Samsumng Galaxy S2 color white smart phone for fied price",
+        "email" : "nadun@gmail.com",
+        "imageUrl" : [ "https://firebasestorage.googleapis.com/v0/b/add-app-9ae19.appspot.com/o/ads_images%2FAd%20title%2FIMG_20181213_022923.jpg?alt=media&token=0bd1a917-a217-474b-8043-b64d706ef6a3" ],
+        "price" : 1500.25,
+        "title" : "Samsumg Galaxy for sale"
+      },
+      "-LTbKUfpsgOgMbGHiUxv" : {
+        "contact" : "08723213",
+        "description" : "descriot",
+        "email" : "Ad title",
+        "imageUrl" : [ "https://firebasestorage.googleapis.com/v0/b/add-app-9ae19.appspot.com/o/ads_images%2FAd%20title%2FIMG_20181213_022923.jpg?alt=media&token=5bacdf57-8ef1-493b-afdf-c856571dcda2" ],
+        "price" : 2323.2,
+        "title" : "Title"
+      }
+    },
+    "users" : {
+      "-LTWFU7DlwstGyRFBBz4" : {
+        "email" : "asank@gmail.com",
+        "username" : "asanka"
+      },
+      "-LTWKX8cjsOYk4R-sJRY" : {
+        "email" : "asaa@gmail.com",
+        "username" : "asa"
+      },
+      "-LTWM2sQYxu_dMzd23tV" : {
+        "email" : "email@mail.com",
+        "username" : "name"
+      },
+      "-LTbLAi9W3UFYw9rgP_G" : {
+        "email" : "nit@mail.com",
+        "username" : "NIT"
+      }
+    }
+  }
+}
