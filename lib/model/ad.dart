@@ -29,6 +29,16 @@ class Ad {
         contact = json['contact'],
         email = json['email'];
 
+  Ad.fromAdJson(Map<dynamic, dynamic> json)
+      : key = json['key'],
+        title = json['title'],
+        description = json['descripton'],
+        price = double.parse(json['price'].toString()),
+        imageUrl =
+            (json['imageUrl'] != null) ? json['imageUrl'].cast<String>() : [],
+        contact = json['contact'],
+        email = json['email'];
+
   Ad.fromSnapshot(DataSnapshot snapshot)
       : key = snapshot.value['key'],
         title = snapshot.value['title'],

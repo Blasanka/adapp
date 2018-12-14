@@ -1,89 +1,125 @@
+import 'package:ad_app/model/ad.dart';
+import 'package:ad_app/screens/edit_ad.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-class ExpansionTileSample extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('ExpansionTile'),
-      ),
-      body: ListView.builder(
-        itemBuilder: (BuildContext context, int index) =>
-            EntryItem(data[index]),
-        itemCount: data.length,
-      ),
-    );
-  }
-}
-
-// One entry in the multilevel list displayed by this app.
-class Entry {
-  Entry(this.title, [this.children = const <Entry>[]]);
+class UserAdItemList extends StatefulWidget {
+  const UserAdItemList({this.title});
 
   final String title;
-  final List<Entry> children;
+
+  _UserAdItemListState createState() => _UserAdItemListState();
 }
 
-// The entire multilevel list displayed by this app.
-final List<Entry> data = <Entry>[
-  Entry(
-    'Chapter A',
-    <Entry>[
-      Entry(
-        'Section A0',
-        <Entry>[
-          Entry('Item A0.1'),
-          Entry('Item A0.2'),
-          Entry('Item A0.3'),
-        ],
-      ),
-      Entry('Section A1'),
-      Entry('Section A2'),
-    ],
-  ),
-  Entry(
-    'Chapter B',
-    <Entry>[
-      Entry('Section B0'),
-      Entry('Section B1'),
-    ],
-  ),
-  Entry(
-    'Chapter C',
-    <Entry>[
-      Entry('Section C0'),
-      Entry('Section C1'),
-      Entry(
-        'Section C2',
-        <Entry>[
-          Entry('Item C2.0'),
-          Entry('Item C2.1'),
-          Entry('Item C2.2'),
-          Entry('Item C2.3'),
-        ],
-      ),
-    ],
-  ),
-];
+class _UserAdItemListState extends State<UserAdItemList> {
+  int _currentIndex = 0;
 
-// Displays one Entry. If the entry has children then it's displayed
-// with an ExpansionTile.
-class EntryItem extends StatelessWidget {
-  const EntryItem(this.entry);
-
-  final Entry entry;
-
-  Widget _buildTiles(Entry root) {
-    if (root.children.isEmpty) return ListTile(title: Text(root.title));
-    return ExpansionTile(
-      key: PageStorageKey<Entry>(root),
-      title: Text(root.title),
-      children: root.children.map(_buildTiles).toList(),
-    );
-  }
+  DatabaseReference dbRef =
+      FirebaseDatabase.instance.reference().child("add-app").child('ad');
 
   @override
   Widget build(BuildContext context) {
-    return _buildTiles(entry);
+    return StreamBuilder(
+        stream: dbRef.onValue,
+        builder: (BuildContext context, AsyncSnapshot<Event> snapshot) {
+          if (snapshot.hasData) {
+            Map<dynamic, dynamic> map = snapshot.data.snapshot.value;
+
+            return new ListView.builder(
+              itemCount: map.values.toList().length,
+              padding: const EdgeInsets.all(2.0),
+              itemBuilder: (BuildContext context, int index) {
+                Ad ad = Ad.fromAdJson(map.values.toList()[index]);
+                return _buildItem(ad);
+              },
+            );
+          } else {
+            return Center(child: new CircularProgressIndicator());
+          }
+        });
+  }
+
+  Widget _buildItem(Ad ad) {
+    TextStyle textStyle = TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.w200,
+        fontSize: 15.0,
+        fontFamily: 'PT_Sans');
+
+    return Padding(
+      key: Key(ad.title),
+      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 12.0),
+      child: ExpansionTile(
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(ad.imageUrl[0]),
+        ),
+        title: Text(ad.title ?? 'loading..',
+            style: textStyle.copyWith(fontSize: 18.0)),
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                // Text(ad.description ?? 'loading...'),
+                SizedBox(width: 16.0),
+                Text('Manage this Ad: '),
+                IconButton(
+                    tooltip: 'EDIT',
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  AdEditPage(title: 'Edit this Ad')));
+                      // builder: (context) => EditPage(title: 'Login')));
+                    }),
+                SizedBox(width: 16.0),
+                IconButton(
+                    tooltip: 'DELETE',
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        child: new AlertDialog(
+                          title: Text("Are you sure ?"),
+                          content: Text(
+                              "'${ad.title}' will be permanently deleted!"),
+                          actions: [
+                            new FlatButton(
+                              child: const Text("CANCEL"),
+                              onPressed: () =>
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop('dialog'),
+                            ),
+                            new FlatButton(
+                                child: const Text("DELETE"),
+                                onPressed: () {
+                                  setState(() {
+                                    dbRef
+                                        .orderByChild(ad.title)
+                                        .equalTo(ad.title)
+                                        .once()
+                                        .then((DataSnapshot snapshot) {
+                                      Map map = snapshot.value;
+                                      String snapShotKeyToDel =
+                                          map.keys.toList()[0].toString();
+                                      dbRef.child(snapShotKeyToDel).remove();
+                                    });
+                                  });
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop('dialog');
+                                }),
+                          ],
+                        ),
+                      );
+                    }),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

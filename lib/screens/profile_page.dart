@@ -20,40 +20,49 @@ class _ProfilePageState extends State<ProfilePage> {
         fontFamily: 'PT_Sans');
     return Scaffold(
       backgroundColor: Color(0xFFEEEEEE),
-      // appBar: AppBar(
-      //   title: Text(widget.title),
-      //   backgroundColor: Color(0xFF008394),
-      // ),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 4.5,
-            decoration: BoxDecoration(
-              color: Colors.lightGreen,
-            ),
-            child: SafeArea(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                      child: Text(widget.title,
-                          style: textStyle.copyWith(fontSize: 24.0)),
+      appBar: PreferredSize(
+        preferredSize: Size(MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height / 3),
+        child: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+                colors: [Color(0xFF84dab0), Color(0xFF8dd3d4)],
+                begin: const FractionalOffset(0.0, 0.0),
+                end: const FractionalOffset(0.5, 0.0),
+                stops: [0.0, 1.0],
+                tileMode: TileMode.clamp),
+          ),
+          child: SafeArea(
+            child: Column(
+              children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 6.0),
+                        child: Text(widget.title,
+                            style: textStyle.copyWith(fontSize: 24.0)),
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          ExpansionTileSample(),
+        ),
+      ),
+      body: Stack(
+        children: <Widget>[
+          UserAdItemList(
+            title: widget.title,
+          ),
         ],
       ),
     );
