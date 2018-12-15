@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HomePage(title: users[0].username),
+                  builder: (context) => HomePage(curentUser: users[0]),
                 ),
                 (Route<dynamic> route) => false);
           });
@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              content: Text('Err!'),
+              content: Text('Cannot login!'),
             );
           },
         );
@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF00bcd4),
+      backgroundColor: Color(0xFFEEEEEE),
       appBar: AppBar(
         title: Text(widget.title),
         backgroundColor: Color(0xFF008394),
@@ -140,13 +140,27 @@ class _LoginPageState extends State<LoginPage> {
                           (Route<dynamic> route) => false);
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Text(
-                        'or Sign Up',
-                        style: TextStyle(fontSize: 16.0, color: Colors.white70),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            'Still not a member? ',
+                            style: TextStyle(
+                                fontSize: 14.0, color: Colors.black54),
+                          ),
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          Text(
+                            'Sign Up',
+                            style: TextStyle(
+                                fontSize: 16.0, color: Colors.black54),
+                          ),
+                        ],
                       ),
                     ),
                   ),
+                  SizedBox(width: 5.0),
                   RaisedButton(
                     child: Text('Signin'),
                     color: Color(0xFF008394),

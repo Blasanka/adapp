@@ -1,15 +1,18 @@
 import 'package:ad_app/ad_list_item.dart';
 import 'package:ad_app/model/ad.dart';
+import 'package:ad_app/model/user.dart';
 import 'package:ad_app/screens/ad_add_page.dart';
+import 'package:ad_app/screens/login_page.dart';
 import 'package:ad_app/screens/view_ad_page.dart';
 import 'package:ad_app/screens/profile_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
+  HomePage({Key key, this.curentUser}) : super(key: key);
 
-  final String title;
+  final User curentUser;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -17,6 +20,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Ad> adSaves = new List();
+
+  //dropdown
+  Options _selection = Options.logout;
 
   ScrollController _listViewScrollController = new ScrollController();
   double _itemExtent = 50.0;
@@ -35,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Color(0xFFEEEEEE),
       appBar: AppBar(
-        title: Text(widget.title ?? 'Profile Page'),
+        title: Text(widget.curentUser.username ?? 'Profile Page'),
         backgroundColor: Color(0xFF008394),
         leading: IconButton(
           tooltip: 'Your profile',
@@ -45,14 +51,27 @@ class _HomePageState extends State<HomePage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ProfilePage(
-                        title: 'Your Profile', username: widget.title)));
+                        title: 'Your Profile', curentUser: widget.curentUser)));
           },
         ),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.menu),
-            tooltip: 'options',
-            onPressed: () {},
+          PopupMenuButton<Options>(
+            onSelected: (Options result) {
+              setState(() {
+                _selection = result;
+              });
+              _whenSelected();
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<Options>>[
+                  const PopupMenuItem<Options>(
+                    value: Options.logout,
+                    child: Text('Logout'),
+                  ),
+                  const PopupMenuItem<Options>(
+                    value: Options.help,
+                    child: Text('Help'),
+                  ),
+                ],
           ),
         ],
       ),
@@ -77,8 +96,10 @@ class _HomePageState extends State<HomePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      AdCreatePage(title: widget.title ?? 'anonymous')));
+                  builder: (context) => AdCreatePage(
+                        title: widget.curentUser.username ?? 'anonymous',
+                        email: widget.curentUser.email,
+                      )));
         },
         tooltip: 'Create an add',
         child: Icon(Icons.create),
@@ -91,7 +112,8 @@ class _HomePageState extends State<HomePage> {
         .push(
       new MaterialPageRoute<Ad>(
         builder: (BuildContext context) {
-          return new ViewDetailedAdPage(ad: ad, username: widget.title);
+          return new ViewDetailedAdPage(
+              ad: ad, username: widget.curentUser.username);
         },
         fullscreenDialog: true,
       ),
@@ -126,4 +148,24 @@ class _HomePageState extends State<HomePage> {
       curve: new ElasticInCurve(0.01),
     );
   }
+
+  void _whenSelected() async {
+    switch (_selection) {
+      case Options.logout:
+        FirebaseAuth.instance.signOut();
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => LoginPage(title: 'Login Back')),
+            (Route<dynamic> route) => false);
+        break;
+      case Options.help:
+        print('help pressed');
+        break;
+      default:
+        print('nothing pressed');
+    }
+  }
 }
+
+enum Options { logout, help }

@@ -69,7 +69,7 @@ class _AdEditPageState extends State<AdEditPage> {
     return false;
   }
 
-  void _createAd() async {
+  void _editAd() async {
     if (_validateAndSave()) {
       List<String> images = _images.map((m) => m.path).toList();
       Ad ad = new Ad(
@@ -100,7 +100,7 @@ class _AdEditPageState extends State<AdEditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFF00bcd4),
+        backgroundColor: Color(0xFFEEEEEE),
         appBar: AppBar(
           title: Text(widget.title),
           backgroundColor: Color(0xFF008394),
@@ -153,7 +153,7 @@ class _AdEditPageState extends State<AdEditPage> {
                           style: TextStyle(color: Colors.white70),
                         ),
                       ),
-                      onPressed: _createAd,
+                      onPressed: _editAd,
                     ),
                   ],
                 ),

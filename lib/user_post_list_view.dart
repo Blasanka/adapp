@@ -1,12 +1,15 @@
 import 'package:ad_app/model/ad.dart';
+import 'package:ad_app/model/user.dart';
+import 'package:ad_app/screens/ad_add_page.dart';
 import 'package:ad_app/screens/edit_ad.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class UserAdItemList extends StatefulWidget {
-  const UserAdItemList({this.title});
+  const UserAdItemList({this.title, this.user});
 
   final String title;
+  final User user;
 
   _UserAdItemListState createState() => _UserAdItemListState();
 }
@@ -19,22 +22,48 @@ class _UserAdItemListState extends State<UserAdItemList> {
 
   @override
   Widget build(BuildContext context) {
+    Query userRef = dbRef.orderByChild('email').equalTo(widget.user.email);
     return StreamBuilder(
-        stream: dbRef.onValue,
+        stream: userRef.onValue,
         builder: (BuildContext context, AsyncSnapshot<Event> snapshot) {
           if (snapshot.hasData) {
             Map<dynamic, dynamic> map = snapshot.data.snapshot.value;
-
-            return new ListView.builder(
-              itemCount: map.values.toList().length,
-              padding: const EdgeInsets.all(2.0),
-              itemBuilder: (BuildContext context, int index) {
-                Ad ad = Ad.fromAdJson(map.values.toList()[index]);
-                return _buildItem(ad);
-              },
-            );
+            if (map != null) {
+              return new ListView.builder(
+                itemCount: map.values.toList().length,
+                padding: const EdgeInsets.all(2.0),
+                itemBuilder: (BuildContext context, int index) {
+                  Ad ad = Ad.fromAdJson(map.values.toList()[index]);
+                  return _buildItem(ad);
+                },
+              );
+            } else {
+              return Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("You haven't posted any ads, yet"),
+                    SizedBox(width: 4.0),
+                    InkWell(
+                      child: Text('Create an Ad',
+                          style: TextStyle(color: Colors.blueAccent)),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AdCreatePage(
+                                    title: widget.user.username ?? 'anonymous',
+                                    email: widget.user.email)));
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }
           } else {
-            return Center(child: new CircularProgressIndicator());
+            return Center(
+              child: new CircularProgressIndicator(),
+            );
           }
         });
   }

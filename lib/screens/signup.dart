@@ -43,6 +43,18 @@ class _SignupPageState extends State<SignupPage> {
             builder: (context) {
               return AlertDialog(
                 content: Text('Successfully added, please sign in!'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('SIGN IN'),
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginPage(title: 'Login')),
+                          (Route<dynamic> route) => false);
+                    },
+                  ),
+                ],
               );
             },
           );
@@ -73,7 +85,8 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF00bcd4),
+      // backgroundColor: Color(0xFF00bcd4),
+      backgroundColor: Color(0xFFEEEEEE),
       appBar: AppBar(
         title: Text(widget.title),
         backgroundColor: Color(0xFF008394),
@@ -124,6 +137,7 @@ class _SignupPageState extends State<SignupPage> {
                     child: Text('Signup'),
                     onPressed: _addUser,
                   ),
+                  SizedBox(width: 5.0),
                   InkWell(
                     splashColor: Color(0xFF008394),
                     onTap: () {
@@ -134,10 +148,23 @@ class _SignupPageState extends State<SignupPage> {
                           (Route<dynamic> route) => false);
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Text(
-                        'or Sign In',
-                        style: TextStyle(fontSize: 16.0, color: Colors.white70),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            'Already a member? ',
+                            style: TextStyle(
+                                fontSize: 14.0, color: Colors.black54),
+                          ),
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          Text(
+                            'Sign In',
+                            style: TextStyle(
+                                fontSize: 16.0, color: Colors.black54),
+                          ),
+                        ],
                       ),
                     ),
                   ),

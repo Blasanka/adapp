@@ -1,12 +1,13 @@
+import 'package:ad_app/model/user.dart';
 import 'package:ad_app/screens/edit_user_profile.dart';
 import 'package:ad_app/user_post_list_view.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key key, this.title, this.username}) : super(key: key);
+  ProfilePage({Key key, this.title, this.curentUser}) : super(key: key);
 
   final String title;
-  final String username;
+  final User curentUser;
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -55,19 +56,25 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ],
                 ),
-                Text(widget.username ?? 'Username'),
-                Text('Posted ad count'),
+                Text(widget.curentUser.username ?? 'Username',
+                    style: textStyle.copyWith(
+                        color: Colors.white, fontSize: 20.0)),
+                Text(
+                  'Posted ad count ${29}',
+                  style: textStyle.copyWith(color: Colors.white),
+                ),
                 IconButton(
                   iconSize: 30.0,
                   color: Colors.white,
                   icon: Icon(Icons.settings),
                   onPressed: () {
-                    Navigator.pushAndRemoveUntil(
+                    Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                EditAdPage(title: 'Edit Profile')),
-                        (Route<dynamic> route) => false);
+                            builder: (context) => EditUserPage(
+                                  title: 'Edit Profile',
+                                  curentUser: widget.curentUser,
+                                )));
                   },
                 ),
               ],
@@ -79,6 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
         children: <Widget>[
           UserAdItemList(
             title: widget.title,
+            user: widget.curentUser,
           ),
         ],
       ),

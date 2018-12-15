@@ -9,9 +9,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class AdCreatePage extends StatefulWidget {
-  AdCreatePage({Key key, this.title}) : super(key: key);
+  AdCreatePage({Key key, this.title, this.email}) : super(key: key);
 
   final String title;
+  final String email;
 
   @override
   _AdCreatePageState createState() => _AdCreatePageState();
@@ -78,7 +79,7 @@ class _AdCreatePageState extends State<AdCreatePage> {
           price: _price,
           contact: _contact,
           imageUrl: images,
-          email: widget.title); //upcoming emailR
+          email: widget.email); //upcoming emailR
       formKey.currentState.reset();
       try {
         adReference.push().set(ad.toJson()).then((_) {
@@ -100,7 +101,7 @@ class _AdCreatePageState extends State<AdCreatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFF00bcd4),
+        backgroundColor: Color(0xFFEEEEEE),
         appBar: AppBar(
           title: Text(widget.title),
           backgroundColor: Color(0xFF008394),
