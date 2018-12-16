@@ -107,8 +107,7 @@ class _SignupPageState extends State<SignupPage> {
                     decoration: InputDecoration(
                         labelText: 'Name', border: OutlineInputBorder()),
                     onSaved: (value) => _username = value,
-                    validator: (value) =>
-                        value.isEmpty ? 'Userame cant be empty' : null,
+                    validator: validateName,
                   ),
                 ),
                 Padding(
@@ -118,8 +117,7 @@ class _SignupPageState extends State<SignupPage> {
                     decoration: InputDecoration(
                         labelText: 'Email', border: OutlineInputBorder()),
                     onSaved: (value) => _email = value,
-                    validator: (value) =>
-                        value.isEmpty ? 'Name cant be empty' : null,
+                    validator: validateEmail,
                   ),
                 ),
                 Padding(
@@ -129,8 +127,7 @@ class _SignupPageState extends State<SignupPage> {
                     decoration: InputDecoration(
                         labelText: 'Password', border: OutlineInputBorder()),
                     onSaved: (value) => _password = value,
-                    validator: (value) =>
-                        value.isEmpty ? 'Name cant be empty' : null,
+                    validator: validatPassword,
                   ),
                 ),
                 Row(
@@ -180,6 +177,30 @@ class _SignupPageState extends State<SignupPage> {
         ),
       )
     );
+  }
+
+  String validateName(String value) {
+    if (value.length < 3)
+      return 'Name must be more than 2 charater';
+    else
+      return null;
+  }
+
+  String validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value))
+      return 'Enter Valid Email';
+    else
+      return null;
+  }
+
+  String validatPassword(String value) {
+    if (value.length < 5)
+      return 'Password must be strong';
+    else
+      return null;
   }
 
   @override

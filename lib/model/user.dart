@@ -19,9 +19,9 @@ class User {
         contact = '';
 
   Map<String, dynamic> toJson() => {
-        'username': username,
-        'email': email,
-        'password': password,
-        'contact': contact
+        'username': username ?? '',
+        'email': email ?? '',
+        'password': password ?? '',
+        'contact': contact ?? ''
       };
 }

@@ -48,3 +48,7 @@ fatal: Authentication failed for 'https://gitlab.com/leoshak/working-app.git/'
 
 Tech@DESKTOP-OIHLCFC MINGW64 /c/ad_app (master)
 $ git push -u origin master
+
+
+blasa's ssh
+ssh-add C:/Users/BLiyanage/Documents/DevDir/MobileProjects/flutter_projects/trustnobosy

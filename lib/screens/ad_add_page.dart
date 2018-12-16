@@ -167,8 +167,7 @@ class _AdCreatePageState extends State<AdCreatePage> {
                 decoration:
                     InputDecoration(hintText: 'Contact', labelText: 'contact'),
                 onSaved: (value) => _contact = value,
-                validator: (value) =>
-                    (value.isEmpty) ? 'Cannot be emplty' : null,
+                validator: validateMobile,
               ),
               ImageWidgetSection(_getImage, storageReference, _images ?? []),
               Padding(
@@ -193,6 +192,13 @@ class _AdCreatePageState extends State<AdCreatePage> {
             ]),
           ),
         ));
+  }
+
+  String validateMobile(String value) {
+    if (value.length != 10)
+      return 'Mobile Number must be of 10 digit';
+    else
+      return null;
   }
 
   @override

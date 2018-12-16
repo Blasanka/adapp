@@ -116,8 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: InputDecoration(
                       labelText: 'Email', border: OutlineInputBorder()),
                   onSaved: (value) => _email = value,
-                  validator: (value) =>
-                      value.isEmpty ? 'email cant be empty' : null,
+                  validator: validateEmail,
                 ),
               ),
               Padding(
@@ -127,8 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: InputDecoration(
                       labelText: 'Password', border: OutlineInputBorder()),
                   onSaved: (value) => _password = value,
-                  validator: (value) =>
-                      value.isEmpty ? 'Password cant be empty' : null,
+                  validator: validatPassword,
                 ),
               ),
               Row(
@@ -179,4 +177,22 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+  
+  String validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value))
+      return 'Enter Valid Email';
+    else
+      return null;
+  }
+
+  String validatPassword(String value) {
+    if (value.length < 5)
+      return 'Password must be strong';
+    else
+      return null;
+  }
+
 }

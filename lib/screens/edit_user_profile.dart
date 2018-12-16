@@ -20,7 +20,10 @@ class EditUserPage extends StatefulWidget {
 class _EditUserPageState extends State<EditUserPage> {
   final formKey = GlobalKey<FormState>();
 
-  String _email, _username, _currentPassword, _newPassword, _confirmPassword;
+  String _email, _username, _contact;
+  String _currentPassword;
+  String _newPassword;
+  String _confirmPassword;
   bool _autoValidate = false;
 
   FirebaseUser _user;
@@ -34,6 +37,7 @@ class _EditUserPageState extends State<EditUserPage> {
     });
     _email = widget.curentUser.email;
     _username = widget.curentUser.username;
+    _contact = widget.curentUser.contact;
     super.initState();
   }
 
@@ -52,28 +56,30 @@ class _EditUserPageState extends State<EditUserPage> {
   void _editUser() async {
     if (_validateAndSave()) {
       try {
-        if (_username == widget.curentUser.username) {
-          if (_user != null) {
-            final usersReference = FirebaseDatabase.instance
-                .reference()
-                .child('add-app')
-                .child('users');
+        if (_user != null) {
+          final usersReference = FirebaseDatabase.instance
+              .reference()
+              .child('add-app')
+              .child('users');
 
-            usersReference
-                .orderByChild('email')
-                .equalTo(_user.email)
-                .once()
-                .then((DataSnapshot snapshot) {
-              Map<dynamic, dynamic> snap = snapshot.value;
-              List<User> users =
-                  snap.values.map((u) => User.fromJsonUser(u)).toList();
-
-              usersReference.update(users[0].toJson()).then((_) {
-                print('Successfully changed!');
-              });
-              formKey.currentState.reset();
+          usersReference
+              .orderByChild('email')
+              .equalTo(_user.email)
+              .once()
+              .then((DataSnapshot snapshot) {
+            // Map<dynamic, dynamic> snap = snapshot.value;
+            // List<User> users =
+            //     snap.values.map((u) => User.fromJsonUser(u)).toList();//users[0].toJson()
+            User updatedUser = User(
+              username: _username,
+              email: _email,
+              contact: _contact
+            );
+            usersReference.child(snapshot.value['key']).update(updatedUser.toJson()).then((_) {
+              print('Successfully changed!');
             });
-          }
+            formKey.currentState.reset();
+          });
         }
         changePassword(_newPassword);
       } catch (e) {
@@ -89,47 +95,27 @@ class _EditUserPageState extends State<EditUserPage> {
       _user = user;
     });
 
-    if (_currentPassword != newPassword) {
-      if (newPassword == _confirmPassword) {
-        const String API_KEY = 'AIzaSyDnXSwlex6J1ejZC_ibc5d96Dif9Avak8k';
-        final String changePasswordUrl =
-            'https://www.googleapis.com/identitytoolkit/v3/relyingparty/setAccountInfo?key=$API_KEY';
-
-        final String idToken = await user.getIdToken();
-
-        final Map<String, dynamic> payload = {
-          'email': idToken,
-          'password': newPassword,
-          'returnSecureToken': true
-        };
-
-        await http.post(
-          changePasswordUrl,
-          body: json.encode(payload),
-          headers: {'Content-Type': 'application/json'},
-        );
-
-        if (user != null) {
-          showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                content: Text('Details Changed!'),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Row(
-                      children: <Widget>[
-                        Icon(Icons.arrow_back, color: Colors.black),
-                        Text('Go Back')
-                      ],
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
+    if (user != null) {
+      user.updatePassword(newPassword);
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: Text('Profile updated!'),
+          actions: <Widget>[
+            FlatButton(
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.arrow_back, color: Colors.black),
+                  Text('Go Back')
                 ],
-              ));
-        }
-      }
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+      ));
     }
   }
 
@@ -149,23 +135,30 @@ class _EditUserPageState extends State<EditUserPage> {
             child: new ListView(children: <Widget>[
               new TextFormField(
                 enabled: false,
-                initialValue: _email ?? 'email',
+                initialValue: _email ?? '',
                 decoration:
                     InputDecoration(hintText: 'Email', labelText: 'email'),
                 onSaved: (value) => _email = value,
-                validator: (value) =>
-                    (value.isEmpty) ? 'Cannot be emplty' : null,
+                validator: validateEmail,
               ),
               new TextFormField(
-                initialValue: _username,
+                initialValue: _username ?? '',
                 decoration: InputDecoration(
                     hintText: 'Username', labelText: 'username'),
                 onSaved: (value) => _username = value,
-                validator: (value) =>
-                    (value.isEmpty) ? 'Cannot be emplty' : null,
+                validator: validateName,
+              ),
+              new TextFormField(
+                keyboardType: TextInputType.number,
+                initialValue:  _contact ?? '',
+                decoration: InputDecoration(
+                    hintText: 'Contact', labelText: 'mobile'),
+                onSaved: (value) => _contact = value,
+                validator: validateMobile,
               ),
               new TextFormField(
                 obscureText: true,
+                initialValue: '',
                 decoration: InputDecoration(
                     hintText: 'Current Password',
                     labelText: 'Current Password'),
@@ -174,7 +167,7 @@ class _EditUserPageState extends State<EditUserPage> {
                   if (arg.length < 5)
                     return 'password must be greater than 5 charaters';
                   else
-                    return null;
+                    return null;//currentPasswordValidate(arg);
                 },
               ),
               new TextFormField(
@@ -196,10 +189,10 @@ class _EditUserPageState extends State<EditUserPage> {
                     labelText: 'Confirm Password'),
                 onSaved: (value) => _confirmPassword = value,
                 validator: (String arg) {
-                  if (arg.length < 5)
-                    return 'password must be greater than 5 charaters';
-                  else
+                  if (arg != null)
                     return null;
+                  else
+                    return 'confirm password do not match!';
                 },
               ),
               Padding(
@@ -250,6 +243,10 @@ class _EditUserPageState extends State<EditUserPage> {
     else
       return null;
   }
+
+  // currentPasswordValidate(String value) {
+  //     return FirebaseAuth.instance.reauthenticateWithEmailAndPassword(email: _email, password: value) as String;
+  // }
 
   @override
   void dispose() {
