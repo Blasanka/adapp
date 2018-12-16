@@ -1,5 +1,4 @@
 import 'package:ad_app/screens/login_page.dart';
-import 'package:ad_app/screens/welcome_page.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 

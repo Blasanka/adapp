@@ -57,7 +57,7 @@ class AdListItem extends StatelessWidget {
   Widget _displayImage(double cardWidth) {
     return Container(
       child: Image.network(
-        ad.imageUrl[0],
+        (ad.imageUrl.length > 0) ? ad.imageUrl[0] : 'https://robohash.org/11',
         fit: BoxFit.cover,
         width: cardWidth,
         height: 100.0,

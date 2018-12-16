@@ -112,7 +112,7 @@ class _EditUserPageState extends State<EditUserPage> {
         if (user != null) {
           showDialog(
               context: context,
-              child: AlertDialog(
+              builder: (context) => AlertDialog(
                 content: Text('Details Changed!'),
                 actions: <Widget>[
                   FlatButton(

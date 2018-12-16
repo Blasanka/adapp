@@ -43,22 +43,26 @@ class _LoginPageState extends State<LoginPage> {
               .child('add-app')
               .child('users');
 
-          usersReference
+          Query query = usersReference
               .orderByChild('email')
-              .equalTo(user.email)
-              .once()
+              .equalTo(user.email);
+          if (query != null) {
+              query.once()
               .then((DataSnapshot snapshot) {
-            Map<dynamic, dynamic> snap = snapshot.value;
-            List<User> users =
-                snap.values.map((u) => User.fromJsonUser(u)).toList();
+                Map<dynamic, dynamic> snap = snapshot.value;
+                List<User> users =
+                    snap.values.map((u) => User.fromJsonUser(u)).toList();
 
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(curentUser: users[0]),
-                ),
-                (Route<dynamic> route) => false);
-          });
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(curentUser: users[0]),
+                    ),
+                    (Route<dynamic> route) => false);
+              });
+          } else {
+            print('why why why????');
+          }
         } else {
           showDialog(
             context: context,
@@ -108,6 +112,7 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: TextFormField(
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                       labelText: 'Email', border: OutlineInputBorder()),
                   onSaved: (value) => _email = value,

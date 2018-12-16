@@ -73,7 +73,7 @@ class _SignupPageState extends State<SignupPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              content: Text('Email address taken!'),
+              content: Text('Try using different email!'),
             );
           },
         );
@@ -91,89 +91,94 @@ class _SignupPageState extends State<SignupPage> {
         title: Text(widget.title),
         backgroundColor: Color(0xFF008394),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(25.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      labelText: 'Name', border: OutlineInputBorder()),
-                  onSaved: (value) => _username = value,
-                  validator: (value) =>
-                      value.isEmpty ? 'Userame cant be empty' : null,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      labelText: 'Email', border: OutlineInputBorder()),
-                  onSaved: (value) => _email = value,
-                  validator: (value) =>
-                      value.isEmpty ? 'Name cant be empty' : null,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: TextFormField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                      labelText: 'Password', border: OutlineInputBorder()),
-                  onSaved: (value) => _password = value,
-                  validator: (value) =>
-                      value.isEmpty ? 'Name cant be empty' : null,
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  RaisedButton(
-                    color: Color(0xFF008394),
-                    child: Text('Signup'),
-                    onPressed: _addUser,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+          padding: EdgeInsets.all(25.0),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        labelText: 'Name', border: OutlineInputBorder()),
+                    onSaved: (value) => _username = value,
+                    validator: (value) =>
+                        value.isEmpty ? 'Userame cant be empty' : null,
                   ),
-                  SizedBox(width: 5.0),
-                  InkWell(
-                    splashColor: Color(0xFF008394),
-                    onTap: () {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginPage(title: 'Login')),
-                          (Route<dynamic> route) => false);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            'Already a member? ',
-                            style: TextStyle(
-                                fontSize: 14.0, color: Colors.black54),
-                          ),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Text(
-                            'Sign In',
-                            style: TextStyle(
-                                fontSize: 16.0, color: Colors.black54),
-                          ),
-                        ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                        labelText: 'Email', border: OutlineInputBorder()),
+                    onSaved: (value) => _email = value,
+                    validator: (value) =>
+                        value.isEmpty ? 'Name cant be empty' : null,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: TextFormField(
+                    obscureText: true,
+                    decoration: InputDecoration(
+                        labelText: 'Password', border: OutlineInputBorder()),
+                    onSaved: (value) => _password = value,
+                    validator: (value) =>
+                        value.isEmpty ? 'Name cant be empty' : null,
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    RaisedButton(
+                      color: Color(0xFF008394),
+                      child: Text('Signup'),
+                      onPressed: _addUser,
+                    ),
+                    SizedBox(width: 5.0),
+                    InkWell(
+                      splashColor: Color(0xFF008394),
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage(title: 'Login')),
+                            (Route<dynamic> route) => false);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              'Already a member? ',
+                              style: TextStyle(
+                                  fontSize: 14.0, color: Colors.black54),
+                            ),
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            Text(
+                              'Sign In',
+                              style: TextStyle(
+                                  fontSize: 16.0, color: Colors.black54),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
         ),
-      ),
+        ),
+      )
     );
   }
 

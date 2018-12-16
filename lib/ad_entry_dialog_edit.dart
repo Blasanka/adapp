@@ -3,12 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 class AdEntryDialog extends StatefulWidget {
-  final double initialWeight;
   final Ad adEntryToEdit;
 
-  AdEntryDialog.add(this.initialWeight) : adEntryToEdit = null;
-
-  AdEntryDialog.edit(this.adEntryToEdit) : initialWeight = adEntryToEdit.price;
+  AdEntryDialog(this.adEntryToEdit);
 
   @override
   AdEntryDialogState createState() {

@@ -111,7 +111,7 @@ class _UserAdItemListState extends State<UserAdItemList> {
                     onPressed: () {
                       showDialog(
                         context: context,
-                        child: new AlertDialog(
+                        builder: (context) => new AlertDialog(
                           title: Text("Are you sure ?"),
                           content: Text(
                               "'${ad.title}' will be permanently deleted!"),

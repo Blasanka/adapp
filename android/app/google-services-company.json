@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "601568748768",
-    "firebase_url": "https://adapp-df2ae.firebaseio.com",
-    "project_id": "adapp-df2ae",
-    "storage_bucket": "adapp-df2ae.appspot.com"
+    "project_number": "486985981712",
+    "firebase_url": "https://add-app-9ae19.firebaseio.com",
+    "project_id": "add-app-9ae19",
+    "storage_bucket": "add-app-9ae19.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:601568748768:android:61e3eec2f0a05109",
+        "mobilesdk_app_id": "1:486985981712:android:61e3eec2f0a05109",
         "android_client_info": {
           "package_name": "com.example.adapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "601568748768-g16hmj0l0al0uleoa5umievodo6ucts8.apps.googleusercontent.com",
+          "client_id": "486985981712-3q9pu10e33sjrtug39rso75cldogi4du.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyChMoPDp5Z3VvJh4JRQqm8NIKCgUh3CYH8"
+          "current_key": "AIzaSyDM0LRPfPmZ_Bob8ElNXeALK77IPd9OSX4"
         }
       ],
       "services": {

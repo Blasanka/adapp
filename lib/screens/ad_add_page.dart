@@ -28,7 +28,7 @@ class _AdCreatePageState extends State<AdCreatePage> {
   final adReference =
       FirebaseDatabase.instance.reference().child('add-app').child('ad');
 
-  StorageReference reference;
+  StorageReference mainStorageReference, storageReference;
 
   @override
   void initState() {
@@ -42,23 +42,47 @@ class _AdCreatePageState extends State<AdCreatePage> {
     setState(() {
       _images.add(image);
     });
+  }
+
+  Future<List<String>> _addToStorage() async {
+
+    List<String> _downloadableImageUrls = [];
 
     if (_images.length > 0) {
       FirebaseStorage _storage = FirebaseStorage.instance;
-      reference = _storage
+      mainStorageReference = _storage
           .ref()
           .child("ads_images")
-          .child(widget.title)
-          .child(p.basename(image.path));
+          .child(widget.title);
 
-      if (!reference.putFile(_images[_images.length - 1]).isSuccessful) {
-        print('uploading....');
-      } else {
-        print('unsuccessful!');
+      for (var image in _images) {
+        storageReference = mainStorageReference.child(p.basename(image.path));
+        if (!storageReference.putFile(image).isComplete) {
+          _imageUrl = await storageReference.getDownloadURL() as String;
+          _downloadableImageUrls.add(_imageUrl);
+          print('pending...');
+        } else {
+          print('success....');
+        } 
+        // showDialog(
+        //   context: context,
+        //   barrierDismissible: false,
+        //   builder: (context) => new Dialog(
+        //     child: new Column(
+        //       mainAxisSize: MainAxisSize.min,
+        //       children: [
+        //         new CircularProgressIndicator(),
+        //         new Text("Please, wait a second!"),
+        //       ],
+        //     ),
+        //   ),
+        // );
+        // new Future.delayed(new Duration(seconds: 2), () {
+        //   Navigator.pop(context);
+        // });
       }
-
-      _imageUrl = await reference.getDownloadURL() as String;
     }
+    return _downloadableImageUrls;
   }
 
   bool _validateAndSave() {
@@ -72,7 +96,8 @@ class _AdCreatePageState extends State<AdCreatePage> {
 
   void _createAd() async {
     if (_validateAndSave()) {
-      List<String> images = _images.map((m) => m.path).toList();
+      List<String> images = await _addToStorage();
+      images.forEach((f)=>print(f));
       Ad ad = new Ad(
           title: _title,
           description: _description,
@@ -80,7 +105,6 @@ class _AdCreatePageState extends State<AdCreatePage> {
           contact: _contact,
           imageUrl: images,
           email: widget.email); //upcoming emailR
-      formKey.currentState.reset();
       try {
         adReference.push().set(ad.toJson()).then((_) {
           showDialog(
@@ -95,6 +119,11 @@ class _AdCreatePageState extends State<AdCreatePage> {
       } catch (e) {
         print('error: $e');
       }
+      
+      formKey.currentState.reset();
+      setState(() {
+        _images = [];
+      });
     }
   }
 
@@ -126,20 +155,22 @@ class _AdCreatePageState extends State<AdCreatePage> {
                     (value.isEmpty) ? 'Cannot be emplty' : null,
               ),
               new TextFormField(
+                keyboardType: TextInputType.number,
                 decoration:
-                    InputDecoration(hintText: 'Price', labelText: 'price'),
+                    InputDecoration(hintText: 'Price', labelText: 'price', prefix: Text('Rs.')),
                 onSaved: (value) => _price = double.tryParse(value),
                 validator: (value) =>
                     (value.isEmpty) ? 'Cannot be emplty' : null,
               ),
               new TextFormField(
+                keyboardType: TextInputType.number,
                 decoration:
                     InputDecoration(hintText: 'Contact', labelText: 'contact'),
                 onSaved: (value) => _contact = value,
                 validator: (value) =>
                     (value.isEmpty) ? 'Cannot be emplty' : null,
               ),
-              ImageWidgetSection(_getImage, reference, _images ?? []),
+              ImageWidgetSection(_getImage, storageReference, _images ?? []),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: Column(
