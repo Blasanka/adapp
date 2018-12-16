@@ -132,6 +132,7 @@ class _UserAdItemListState extends State<UserAdItemList> {
                                         .once()
                                         .then((DataSnapshot snapshot) {
                                       Map map = snapshot.value;
+                                      print(map.values);
                                       String snapShotKeyToDel =
                                           map.keys.toList()[0].toString();
                                       dbRef.child(snapShotKeyToDel).remove();

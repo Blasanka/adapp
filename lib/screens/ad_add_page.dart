@@ -57,30 +57,32 @@ class _AdCreatePageState extends State<AdCreatePage> {
 
       for (var image in _images) {
         storageReference = mainStorageReference.child(p.basename(image.path));
-        if (!storageReference.putFile(image).isComplete) {
-          _imageUrl = await storageReference.getDownloadURL() as String;
-          _downloadableImageUrls.add(_imageUrl);
-          print('pending...');
-        } else {
-          print('success....');
-        } 
-        // showDialog(
-        //   context: context,
-        //   barrierDismissible: false,
-        //   builder: (context) => new Dialog(
-        //     child: new Column(
-        //       mainAxisSize: MainAxisSize.min,
-        //       children: [
-        //         new CircularProgressIndicator(),
-        //         new Text("Please, wait a second!"),
-        //       ],
-        //     ),
-        //   ),
-        // );
-        // new Future.delayed(new Duration(seconds: 2), () {
-        //   Navigator.pop(context);
-        // });
+
+        StorageUploadTask uploadTask = storageReference.putFile(image);
+        StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+        _imageUrl = downloadUrl;
+        _downloadableImageUrls.add(downloadUrl);
       }
+      
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => new Dialog(
+          child: new Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              new CircularProgressIndicator(),
+              new Text("Please, wait a second!"),
+            ],
+          ),
+        ),
+      );
+      new Future.delayed(new Duration(seconds: 2), () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      });
     }
     return _downloadableImageUrls;
   }
