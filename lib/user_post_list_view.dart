@@ -15,8 +15,6 @@ class UserAdItemList extends StatefulWidget {
 }
 
 class _UserAdItemListState extends State<UserAdItemList> {
-  int _currentIndex = 0;
-
   DatabaseReference dbRef =
       FirebaseDatabase.instance.reference().child("add-app").child('ad');
 
