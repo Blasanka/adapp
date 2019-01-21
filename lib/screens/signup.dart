@@ -1,4 +1,5 @@
 import 'package:ad_app/screens/login_page.dart';
+import 'package:ad_app/utils/validation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -177,30 +178,6 @@ class _SignupPageState extends State<SignupPage> {
         ),
       )
     );
-  }
-
-  String validateName(String value) {
-    if (value.length < 3)
-      return 'Name must be more than 2 charater';
-    else
-      return null;
-  }
-
-  String validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Enter Valid Email';
-    else
-      return null;
-  }
-
-  String validatPassword(String value) {
-    if (value.length < 5)
-      return 'Password must be strong';
-    else
-      return null;
   }
 
   @override

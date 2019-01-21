@@ -10,9 +10,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.curentUser}) : super(key: key);
+  HomePage({Key key, this.currentUser}) : super(key: key);
 
-  final User curentUser;
+  final User currentUser;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Color(0xFFEEEEEE),
       appBar: AppBar(
-        title: Text(widget.curentUser.username ?? 'Profile Page'),
+        title: Text(widget.currentUser.username ?? 'Profile Page'),
         backgroundColor: Color(0xFF008394),
         leading: IconButton(
           tooltip: 'Your profile',
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ProfilePage(
-                        title: 'Your Profile', curentUser: widget.curentUser)));
+                        title: 'Your Profile', curentUser: widget.currentUser)));
           },
         ),
         actions: <Widget>[
@@ -97,8 +97,8 @@ class _HomePageState extends State<HomePage> {
               context,
               MaterialPageRoute(
                   builder: (context) => AdCreatePage(
-                        title: widget.curentUser.username ?? 'anonymous',
-                        email: widget.curentUser.email,
+                        title: widget.currentUser.username ?? 'anonymous',
+                        email: widget.currentUser.email,
                       )));
         },
         tooltip: 'Create an add',
@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
       new MaterialPageRoute<Ad>(
         builder: (BuildContext context) {
           return new ViewDetailedAdPage(
-              ad: ad, username: widget.curentUser.username);
+              ad: ad, username: widget.currentUser.username);
         },
         fullscreenDialog: true,
       ),
@@ -130,15 +130,6 @@ class _HomePageState extends State<HomePage> {
       adSaves.add(new Ad.fromSnapshot(event.snapshot));
     });
     _scrollToTop();
-  }
-
-  _onEntryEdited(Event event) {
-    var oldValue =
-        adSaves.singleWhere((entry) => entry.key == event.snapshot.key);
-    setState(() {
-      adSaves[adSaves.indexOf(oldValue)] = new Ad.fromSnapshot(event.snapshot);
-      adSaves.sort((one, two) => one.price.compareTo(two.price));
-    });
   }
 
   _scrollToTop() {

@@ -1,6 +1,7 @@
 import 'package:ad_app/model/user.dart';
 import 'package:ad_app/screens/home_page.dart';
 import 'package:ad_app/screens/signup.dart';
+import 'package:ad_app/utils/validation.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -56,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => HomePage(curentUser: users[0]),
+                      builder: (context) => HomePage(currentUser: users[0]),
                     ),
                     (Route<dynamic> route) => false);
               });
@@ -84,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
         );
       } finally {
         if (user != null) {
-          //Log in was successfull!
+          //Log in successful!
           setState(() {
             _firebaseUser = user;
           });
@@ -177,22 +178,4 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-  
-  String validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Enter Valid Email';
-    else
-      return null;
-  }
-
-  String validatPassword(String value) {
-    if (value.length < 5)
-      return 'Password must be strong';
-    else
-      return null;
-  }
-
 }
